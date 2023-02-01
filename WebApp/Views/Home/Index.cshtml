@@ -1,0 +1,33 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p></p>
+
+   <div class="uploadForm">
+        <form enctype="multipart/form-data" method="post">
+            <div>
+            <p>Select a file to upload:</p>
+            <input type="file" name="myFile" required  />
+            <p class="text-danger" id="fileError" style="display: none;">File is required</p>
+            </div>
+            <div>
+            <input type="submit" value="Upload" onclick="return Validar();"/>
+            </div>
+        </form>
+   </div>
+    <a href="Plan">Show last 10 planning</a>
+</div>
+
+<script>
+function Validar() {
+    var fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput.value) {
+        document.querySelector('#fileError').style.display = 'block';
+        return false;
+    }
+    return true;
+}
+</script>
