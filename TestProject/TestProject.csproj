@@ -22,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="TestData\testdataInvalidWeightDouble.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="TestData\testdataMoreThan100Drones.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

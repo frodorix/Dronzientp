@@ -40,7 +40,7 @@ namespace CORE.Application.PlanningAlgorithm
 
                 foreach (var dron in droneSorted)
                 {
-                    int totalWeight = 0;
+                    double totalWeight = 0;
                     var trip = new List<MPackage>();
                     for (int i = 0; i < sortedPackages.Count && dron.MaxWeight > totalWeight; i++)
                     {

@@ -60,11 +60,11 @@ namespace DronPlan.Core.Application
         public Tuple<List<MDrone>, List<MPackage>> ParseInputData(string csvFilename)
         {
             string[] parts;
-            int w;
+            double w;
             string line;
             int id = 1;
             int idp = 1;
-            int maxweight = 0;
+            double maxweight = 0;
             var drones = new List<MDrone>();
             var packages = new List<MPackage>();
             using (var reader = new StreamReader(csvFilename))
@@ -84,7 +84,7 @@ namespace DronPlan.Core.Application
                     for (int i = 0; i < parts.Length; i += 2)
                     {
 
-                        if (int.TryParse(parts[i + 1], out w))
+                        if (double.TryParse(parts[i + 1], out w))
                         {
                             drones.Add(new MDrone()
                             {
@@ -107,7 +107,7 @@ namespace DronPlan.Core.Application
                 {
                     line = reader.ReadLine();//TODO: read Async
                     parts = line.Split(',');
-                    if (int.TryParse(parts[1], out w))
+                    if (double.TryParse(parts[1], out w))
                     {
                         if (w > maxweight)
                         {

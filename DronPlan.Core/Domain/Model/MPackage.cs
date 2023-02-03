@@ -11,7 +11,7 @@
 
         public int Id { get; set; }
         public string Location { get; set; }
-        public int Weight { get; set; }
+        public double Weight { get; set; }
         public bool Selected { get;  set; }
     }
 }
