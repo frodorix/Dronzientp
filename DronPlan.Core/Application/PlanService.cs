@@ -75,7 +75,7 @@ namespace DronPlan.Core.Application
                 if (!reader.EndOfStream)
                 {
                     line = reader.ReadLine();
-                    parts = line.Split(',');
+                    parts = line.Replace("[","").Replace("]", "").Split(',');
                     Trace.WriteLine($"Number of drones: {parts.Length}");
                     if(parts.Length/2 > 100)
                     {
@@ -106,7 +106,7 @@ namespace DronPlan.Core.Application
                 while (!reader.EndOfStream)
                 {
                     line = reader.ReadLine();//TODO: read Async
-                    parts = line.Split(',');
+                    parts = line.Replace("[", "").Replace("]", "").Split(',');
                     if (double.TryParse(parts[1], out w))
                     {
                         if (w > maxweight)
