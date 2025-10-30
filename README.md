@@ -84,6 +84,8 @@ The solution follows Clean Architecture principles with 4 main projects:
    git clone https://github.com/frodorix/Dronzientp.git
    cd Dronzientp
    ```
+   
+   *Note: The repository name 'Dronzientp' is the actual GitHub repository name.*
 
 2. **Configure MongoDB connection**
    
@@ -127,7 +129,13 @@ The solution follows Clean Architecture principles with 4 main projects:
 1. **Configure environment variables**
    ```bash
    cp .env.example .env
-   # Edit .env with your MongoDB credentials
+   # Edit .env and set a strong MongoDB password (minimum 12 characters with uppercase, lowercase, numbers, and symbols)
+   ```
+   
+   **IMPORTANT**: Change the default MongoDB password in your `.env` file before deployment!
+   ```
+   MONGO_ROOT_USER=admin
+   MONGO_ROOT_PASSWORD=YourStrongPasswordHere!123
    ```
 
 2. **Start services with Docker Compose**
