@@ -48,7 +48,7 @@ namespace TestProject
         {
             var dataGreater = await TestFile("testdata20k.csv");
             var dataLower= await TestFile("testdata20k-DuplicatedLocations.csv");
-            Assert.Greater(dataGreater, dataLower );
+            Assert.That(dataGreater, Is.GreaterThan(dataLower));
         }
     }
 }
