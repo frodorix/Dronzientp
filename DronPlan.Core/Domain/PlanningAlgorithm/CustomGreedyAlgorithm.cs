@@ -1,69 +1,97 @@
 ﻿using CORE.Domain.Model;
 using CORE.Domain.PlanningAlgorithm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CORE.Application.PlanningAlgorithm
 {
+    /// <summary>
+    /// Custom greedy algorithm implementation for drone delivery planning.
+    /// Optimizes package assignment by prioritizing location grouping and drone capacity utilization.
+    /// </summary>
     public class CustomGreedyAlgorithm : IPlanningAlgorithm
     {
         /// <summary>
-        ///         
+        /// Prepares a delivery plan by assigning packages to drones using a custom greedy approach.
+        /// The algorithm sorts drones by capacity (descending) and packages by location frequency and weight (ascending)
+        /// to minimize trips to the same location and maximize drone utilization.
         /// </summary>
-        /// <returns>List of Drones wind assigned trips</returns>
-        public MTripPlan PrepareDeliveryPlan(List<MDrone> drone, List<MPackage> packages)
+        /// <param name="drones">List of available drones with their capacities</param>
+        /// <param name="packages">List of packages to be delivered</param>
+        /// <returns>A trip plan with packages assigned to drone trips</returns>
+        public MTripPlan PrepareDeliveryPlan(List<MDrone> drones, List<MPackage> packages)
         {
-
-            //Sorting the drones to use first the bigger ones
-            var droneSorted = drone.OrderByDescending(d => d.MaxWeight).ToList();
-            //grouping packages in order to assing duplicated locations to the same drone and reduce de trips to the same location
+            // Sort drones by capacity (descending) to use larger drones first
+            var sortedDrones = drones.OrderByDescending(d => d.MaxWeight).ToList();
+            
+            // Group packages by location to identify delivery hotspots
             var packageGroups = packages.GroupBy(x => x.Location)
-                .Select(x => new { Location = x.Key, Count = x.Count(), TotalWeight = x.Sum(y => y.Weight) });
-            ///packages are sorted ascending by duplicated locations, then  by  Grouped weight in ascending order, 
-            ///then by package weight ascending, in order to assing first the lightest packages             
+                .Select(x => new { 
+                    Location = x.Key, 
+                    Count = x.Count(), 
+                    TotalWeight = x.Sum(y => y.Weight) 
+                })
+                .ToList();
+            
+            // Sort packages by:
+            // 1. Location frequency (ascending) - less frequent locations first
+            // 2. Grouped weight (ascending) - lighter groups first
+            // 3. Individual weight (ascending) - lighter packages first
+            // This optimizes for better packing and reduces trips to same location
             var sortedPackages = (from p in packages
                                   join g in packageGroups on p.Location equals g.Location
                                   orderby g.Count ascending, g.TotalWeight ascending, p.Weight ascending
                                   select p).ToList();
-            // it provides a better performance with ascending order when there are duplicated locations
 
-
-            bool usedDrons = true;
-
-            while (sortedPackages.Count() > 0 && usedDrons)
-
+            // Convert to HashSet for O(1) removal performance instead of List.RemoveAt(i)
+            var unassignedPackages = new HashSet<MPackage>(sortedPackages);
+            
+            // Continue while there are packages and drones can still be used
+            bool dronesUsed = true;
+            while (unassignedPackages.Count > 0 && dronesUsed)
             {
-                usedDrons = false;
+                dronesUsed = false;
 
-                foreach (var dron in droneSorted)
+                foreach (var drone in sortedDrones)
                 {
-                    double totalWeight = 0;
+                    double tripWeight = 0;
                     var trip = new List<MPackage>();
-                    for (int i = 0; i < sortedPackages.Count && dron.MaxWeight > totalWeight; i++)
+                    
+                    // Use a temporary list to track packages to remove (avoid modifying HashSet during iteration)
+                    var packagesToAssign = new List<MPackage>();
+                    
+                    foreach (var package in sortedPackages.Where(p => unassignedPackages.Contains(p)))
                     {
-                        var unassingedPackage = sortedPackages[i];
-                        if (unassingedPackage.Weight <= dron.MaxWeight - totalWeight)
+                        double remainingCapacity = drone.MaxWeight - tripWeight;
+                        
+                        if (package.Weight <= remainingCapacity)
                         {
-                            sortedPackages.RemoveAt(i);
-                            i--;
-
-                            trip.Add(unassingedPackage);
-                            totalWeight += unassingedPackage.Weight;
+                            packagesToAssign.Add(package);
+                            tripWeight += package.Weight;
+                        }
+                        
+                        // Stop if drone is at capacity
+                        if (tripWeight >= drone.MaxWeight)
+                        {
+                            break;
                         }
                     }
+                    
+                    // Remove assigned packages from unassigned set
+                    foreach (var package in packagesToAssign)
+                    {
+                        unassignedPackages.Remove(package);
+                        trip.Add(package);
+                    }
+                    
+                    // Add trip to drone if it has packages
                     if (trip.Count > 0)
                     {
-                        usedDrons = true;
-                        dron.Trips.Add(trip);
+                        dronesUsed = true;
+                        drone.Trips.Add(trip);
                     }
                 }
             }
-            var plan = new MTripPlan(droneSorted);
-            return plan;
+            
+            return new MTripPlan(sortedDrones);
         }
-
     }
 }
