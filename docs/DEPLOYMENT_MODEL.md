@@ -1,10 +1,10 @@
 # AeroRoute Deployment Model & Infrastructure
 
-This document details the deployment architecture, container topology, networks, volume management, and environment configurations for **AeroRoute**.
+This document details the container deployment model for **AeroRoute**, based exclusively on **Docker & Docker Compose**.
 
 ---
 
-## 🐳 Docker Compose Deployment Diagram
+## 🐳 Docker Compose Architecture Diagram
 
 ```mermaid
 graph TD
@@ -17,6 +17,7 @@ graph TD
             DotnetRuntime[".NET 10 ASP.NET Core Runtime"]
             StaticUI["Static Web Assets (wwwroot)"]
             AppConfig["Env: ConnectionStrings__MongoDB"]
+            HealthEndpoint["Healthcheck: /healthz"]
         end
         
         subgraph MongoContainerDetails ["Database Service"]
@@ -50,26 +51,41 @@ graph TD
 
 ---
 
-## 🌐 Production Topology & Kubernetes Guidelines
+## 🚀 Docker Production Container Topology Diagram
 
 ```mermaid
 graph LR
-    Ingress["Kubernetes Ingress Controller / NGINX"] -->|TLS Termination| WebService["AeroRoute Web Service (ClusterIP)"]
+    ReverseProxy["Docker NGINX Proxy / Edge Gateway"] -->|HTTP / TLS| WebContainer1["AeroRoute Web Container 1"]
+    ReverseProxy -->|HTTP / TLS| WebContainer2["AeroRoute Web Container 2"]
     
-    subgraph K8s Cluster ["Production Kubernetes Cluster"]
-        WebService --> Pod1["Web Pod 1"]
-        WebService --> Pod2["Web Pod 2"]
-        
-        Pod1 --> MongoStatefulSet["MongoDB StatefulSet / Managed Mongo"]
-        Pod2 --> MongoStatefulSet
+    subgraph Docker Engine ["Docker Engine Host"]
+        WebContainer1 --> MongoContainer["MongoDB Container"]
+        WebContainer2 --> MongoContainer
     end
 
-    MongoStatefulSet --> CloudStorage[("Cloud Persistent Volume / PVC")]
+    MongoContainer --> VolMount[("Docker Volume (mongo_data)")]
 ```
 
-### Production Checklist
-1. **Secrets Management**: Inject `ConnectionStrings__MongoDB` via Kubernetes Secrets or Azure Key Vault / AWS Secrets Manager.
-2. **Health Probes**: Configure Liveness and Readiness probes pointing to `/healthz`.
-   - `livenessProbe`: `GET /healthz` (initialDelaySeconds: 10, periodSeconds: 15)
-   - `readinessProbe`: `GET /healthz` (initialDelaySeconds: 5, periodSeconds: 10)
-3. **Horizontal Pod Autoscaling (HPA)**: Target CPU utilization > 75% for auto-scaling Web Pods.
+---
+
+## 🛡️ Docker Container Health Checks & Operations
+
+AeroRoute integrates Docker native container health checks utilizing the `/healthz` HTTP endpoint:
+
+### Docker Compose Healthcheck Configuration
+```yaml
+services:
+  web:
+    build: .
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/healthz"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+```
+
+### Production Docker Container Guidelines
+1. **Secrets Management**: Pass sensitive connection strings using Docker Compose `.env` files or Docker Secrets.
+2. **Container Monitoring**: Monitor container health status using `docker ps` and native Docker healthcheck statuses.
+3. **Data Persistence**: Always use named Docker volumes (`mongo_data`) to prevent data loss across container recreations.

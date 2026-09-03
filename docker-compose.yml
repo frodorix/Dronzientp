@@ -7,6 +7,11 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     build:
@@ -21,7 +26,14 @@ services:
       - MongoDbSettings__DatabaseName=DroneDeliveryDb
       - MongoDbSettings__CollectionName=DeliveryPlans
     depends_on:
-      - mongo
+      mongo:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost/healthz || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 volumes:
   mongo_data:
