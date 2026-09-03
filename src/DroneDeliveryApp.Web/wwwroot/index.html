@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroRoute - Autonomous Drone Delivery Planner</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind Play CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['Outfit', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans flex flex-col antialiased">
+    
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 flex items-center justify-between py-3">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-cyan-500 to-emerald-400 p-0.5 shadow-lg shadow-indigo-500/20">
+                    <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-helicopter text-cyan-400 text-lg animate-pulse"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
+                        AeroRoute <span class="text-xs px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 font-medium">.NET Engine</span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Intelligent Drone Dispatch & Route Optimization</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button id="btnDownloadSample" class="btn-secondary text-xs sm:text-sm px-3.5 py-2 rounded-xl border border-slate-700/80 bg-slate-800/60 hover:bg-slate-800 text-slate-200 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-file-csv text-emerald-400"></i>
+                    <span>Sample CSV</span>
+                </button>
+
+                <button id="btnOpenHistory" class="btn-primary text-xs sm:text-sm px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-cyan-600 hover:from-indigo-500 hover:to-cyan-500 text-white font-medium shadow-lg shadow-indigo-600/25 transition-all flex items-center space-x-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>Plan History</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- Hero & Upload Section -->
+        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left Info Panel -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="space-y-3">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-semibold">
+                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span>Capacity-First & Location Grouping Routing</span>
+                    </div>
+                    <h2 class="text-3xl font-extrabold text-white tracking-tight leading-tight">
+                        Upload Delivery Data & Generate Optimal Dispatch Plans
+                    </h2>
+                    <p class="text-slate-400 text-sm leading-relaxed">
+                        AeroRoute prioritizes high-capacity drones first, groups packages destined for the same location into combined trips, and persists generated route history in MongoDB.
+                    </p>
+                </div>
+
+                <!-- Features list -->
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-2.5">
+                        <i class="fa-solid fa-scale-balanced text-indigo-400 text-base"></i>
+                        <div>
+                            <div class="font-semibold text-slate-200">Max Capacity First</div>
+                            <div class="text-slate-400 text-[11px]">Largest drones prioritized</div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-2.5">
+                        <i class="fa-solid fa-location-dot text-cyan-400 text-base"></i>
+                        <div>
+                            <div class="font-semibold text-slate-200">Location Clustering</div>
+                            <div class="text-slate-400 text-[11px]">Consolidates same stops</div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-2.5">
+                        <i class="fa-solid fa-database text-emerald-400 text-base"></i>
+                        <div>
+                            <div class="font-semibold text-slate-200">MongoDB Storage</div>
+                            <div class="text-slate-400 text-[11px]">Auto-saved plans</div>
+                        </div>
+                    </div>
+                    <div class="p-3 rounded-xl bg-slate-900/60 border border-slate-800 flex items-center space-x-2.5">
+                        <i class="fa-solid fa-bolt text-amber-400 text-base"></i>
+                        <div>
+                            <div class="font-semibold text-slate-200">High Speed</div>
+                            <div class="text-slate-400 text-[11px]">Streaming parser</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right File Upload Dropzone -->
+            <div class="lg:col-span-7">
+                <div class="glass-card p-6 sm:p-8 rounded-2xl border border-slate-800/90 bg-slate-900/50 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                    <div class="absolute -right-16 -top-16 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                    <div class="absolute -left-16 -bottom-16 w-48 h-48 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                    <form id="uploadForm" class="space-y-6">
+                        <div id="dropzone" class="dropzone-area border-2 border-dashed border-slate-700 hover:border-indigo-500/80 rounded-xl p-8 text-center cursor-pointer transition-all duration-300 bg-slate-950/40 hover:bg-slate-900/70 group">
+                            <input type="file" id="csvFileInput" accept=".csv" class="hidden">
+                            
+                            <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-indigo-400 group-hover:text-cyan-400 transition-colors"></i>
+                            </div>
+
+                            <h3 class="text-base font-semibold text-slate-200 mb-1" id="fileSelectText">
+                                Drop your CSV file here or <span class="text-indigo-400 underline decoration-indigo-400/40 underline-offset-4">browse file</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mb-4">Supports standard Drone delivery CSVs & tabular CSV formats</p>
+                            
+                            <div id="selectedFileInfo" class="hidden inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-indigo-500/15 text-indigo-300 text-xs font-mono border border-indigo-500/30">
+                                <i class="fa-solid fa-file-lines text-indigo-400"></i>
+                                <span id="fileNameDisplay">selected.csv</span>
+                                <button type="button" id="btnClearFile" class="text-slate-400 hover:text-red-400 ml-2">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Format preset buttons -->
+                        <div class="flex flex-wrap gap-2 items-center justify-between text-xs">
+                            <span class="text-slate-400 font-medium">Quick Preset Samples:</span>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" id="btnLoadSampleStandard" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-play text-emerald-400 text-[10px]"></i>
+                                    <span>Preset Standard</span>
+                                </button>
+                                <button type="button" id="btnLoadSampleTabular" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center space-x-1">
+                                    <i class="fa-solid fa-table text-cyan-400 text-[10px]"></i>
+                                    <span>Preset Tabular</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btnGeneratePlan" class="w-full py-3.5 px-6 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-cyan-500 hover:from-indigo-500 hover:to-cyan-400 text-white font-bold tracking-wide shadow-lg shadow-indigo-600/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Generate Delivery Plan</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Delivery Plan Results Dashboard (Hidden until plan is generated) -->
+        <section id="resultsSection" class="hidden space-y-6">
+            
+            <!-- Summary Stats Banner -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-helicopter text-indigo-400"></i>
+                        <span>Active Drones</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statDrones">0</div>
+                </div>
+
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-route text-cyan-400"></i>
+                        <span>Total Trips</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statTrips">0</div>
+                </div>
+
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-box text-emerald-400"></i>
+                        <span>Delivered Packages</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statPackages">0</div>
+                </div>
+
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-weight-hanging text-amber-400"></i>
+                        <span>Total Weight</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statWeight">0 kg</div>
+                </div>
+
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-gauge-high text-violet-400"></i>
+                        <span>Avg Capacity Utilization</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statUtilization">0%</div>
+                </div>
+
+                <div class="stat-card p-4 rounded-xl bg-slate-900/60 border border-slate-800/80">
+                    <div class="text-xs text-slate-400 flex items-center space-x-1.5 mb-1">
+                        <i class="fa-solid fa-stopwatch text-rose-400"></i>
+                        <span>Planner Runtime</span>
+                    </div>
+                    <div class="text-2xl font-bold text-white" id="statExecutionTime">0 ms</div>
+                </div>
+            </div>
+
+            <!-- Unassigned Packages Warning Banner (if any) -->
+            <div id="unassignedBanner" class="hidden p-4 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-200 flex items-start space-x-3">
+                <i class="fa-solid fa-triangle-exclamation text-rose-400 text-lg mt-0.5"></i>
+                <div class="space-y-1 flex-1">
+                    <div class="font-bold text-sm" id="unassignedTitle">Unassigned Packages Warning</div>
+                    <div class="text-xs text-rose-300/80" id="unassignedDescription"></div>
+                    <div id="unassignedList" class="flex flex-wrap gap-1.5 pt-1"></div>
+                </div>
+            </div>
+
+            <!-- Drone Trips Visual Cards Grid -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-map-location-dot text-indigo-400"></i>
+                        <span>Drone Dispatch Breakdown</span>
+                    </h3>
+                    <span class="text-xs text-slate-400 font-mono" id="planMetadata">Plan ID: -</span>
+                </div>
+
+                <div id="dronePlansContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Dynamic Drone Cards Injected Here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal: Plan History Drawer/Modal -->
+    <div id="historyModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+        <div class="glass-card w-full max-w-4xl max-h-[85vh] bg-slate-900 border border-slate-800 rounded-2xl flex flex-col shadow-2xl overflow-hidden">
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-lg bg-indigo-500/10 flex items-center justify-center">
+                        <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-white">Recent Delivery Plans</h3>
+                        <p class="text-xs text-slate-400">Stored in MongoDB database repository</p>
+                    </div>
+                </div>
+
+                <button id="btnCloseHistory" class="text-slate-400 hover:text-white p-2 rounded-lg hover:bg-slate-800 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Modal Content -->
+            <div class="p-6 overflow-y-auto space-y-4 flex-1">
+                <div id="historyListContainer" class="space-y-3">
+                    <!-- Dynamic History Cards -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-800/60 bg-slate-950/80 py-6 text-center text-xs text-slate-500">
+        <p>AeroRoute Drone Delivery Optimization Engine &bull; ASP.NET Core &amp; MongoDB &bull; Google Deepmind Team Architecture</p>
+    </footer>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

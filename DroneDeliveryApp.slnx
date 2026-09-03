@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/DroneDeliveryApp.Core/DroneDeliveryApp.Core.csproj" />
+    <Project Path="src/DroneDeliveryApp.Infrastructure/DroneDeliveryApp.Infrastructure.csproj" />
+    <Project Path="src/DroneDeliveryApp.Web/DroneDeliveryApp.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/DroneDeliveryApp.Tests/DroneDeliveryApp.Tests.csproj" />
+  </Folder>
+</Solution>

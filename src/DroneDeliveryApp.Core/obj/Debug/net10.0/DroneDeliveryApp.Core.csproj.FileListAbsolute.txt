@@ -1,0 +1,11 @@
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/bin/Debug/net10.0/DroneDeliveryApp.Core.deps.json
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/bin/Debug/net10.0/DroneDeliveryApp.Core.dll
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/bin/Debug/net10.0/DroneDeliveryApp.Core.pdb
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.GeneratedMSBuildEditorConfig.editorconfig
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.AssemblyInfoInputs.cache
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.AssemblyInfo.cs
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.csproj.CoreCompileInputs.cache
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.dll
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/refint/DroneDeliveryApp.Core.dll
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/DroneDeliveryApp.Core.pdb
+/home/frodo/source/vibe/frodorix/Doronzient2026/src/DroneDeliveryApp.Core/obj/Debug/net10.0/ref/DroneDeliveryApp.Core.dll
